@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>주소 검색</title>
+<link rel="stylesheet" href="/css/board.css">
+<script>
+const addrCheck = (zipcode,addr1,addr2,addr3) => {
+	
+	window.opener.document.getElementById('zipcode').value = zipcode;
+	window.opener.document.getElementById('addr1').value = addr1 + addr2 + addr3;
+	window.close();
+	
+}	
+</script>
+</head>
+
+<body>
+<div class="main">
+	<h1>주소 검색</h1>
+	<table class="InfoTable">
+		<tr>
+			<th>우편번호</th>
+			<th>주소</th>
+			<th>선택</th>
+		</tr>
+		<tbody>
+			<th:block th:if="${list != null}">
+			<tr th:each="list:${list}">
+				<td>[[${list.zipcode}]]</td>
+				<td style="text-align:left">[[${list.province}]][[${list.road}]][[${list.building}]]<br>[[${list.oldaddr}]]</td>
+				<td><input type="button" value="선택"  th:onclick="addrCheck([[${list.zipcode}]],[[${list.province}]],[[${list.road}]],[[${list.building}]])"></td>
+			</tr>
+			</th:block>
+			<th:block th:if="${list == null}">
+				<tr>
+					<td colspan="3">검색된 주소가 없습니다.</td>
+				</tr>
+		</tbody>
+	</table>
+	<div>[(${pageList})]</div>
+</div>
+
+
+</body>
+</html>

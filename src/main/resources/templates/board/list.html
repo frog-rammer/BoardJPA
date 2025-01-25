@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>게시물 목록 보기</title>
+<link rel="stylesheet" href="/css/board.css">
+<script src="/js/getCookie.js"></script>
+<script>
+
+const search = () => {
+	const keyword = document.querySelector('#keyword');
+	document.location.href='/board/list?page=1&keyword=' + keyword.value;
+}
+
+const press = () => {
+	if(event.keyCode == 13) search();
+}
+
+const logout = () => {
+	if(confirm('로그아웃하시겠습니까?')){
+		
+		let authkey = getCookie('authkey');
+		if(authkey != undefined)
+			document.cookie = 'authkey=' + authkey + ";path=/;max-age=0";
+		
+		document.location.href='/member/logout';	
+	}
+	
+}
+
+</script>
+
+</head>
+
+<body>
+    <div class="main">
+        <img src="/images/logo.jpg" id="topBanner"><br>
+        <h1 style="text-align: center;">게시물 목록</h1>
+        <input type="text" name="keyword" id="keyword" 
+         		style="width:35%;height:30px;border:2px solid #168;font-size: 16px"
+         		placeholder="검색할 제목, 작성자이름 및 내용을 입력하세요." onkeydown="press()">
+        <input type="button" value="검색" 
+             style="width:5%;height:30px;background:#158;color:white;font-weight:bold;cursor:pointer;"
+             	onclick="search()">		
+		 <br><br>
+        <table class="InfoTable">
+            <tr>
+                <th>번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>작성일</th>
+                <th>조회수</th>
+            </tr>
+            <th:block th:if="${list != null}">     
+	            <tr th:each="list,index:${list}" 
+	            	onMouseover="this.style.background='#46D2D2'" 
+	            	onMouseout="this.style.background='white'">
+	            	<!-- totalElement, postNum, page, index.count -->
+	                <td th:text="${totalElement - (page-1)*postNum - index.count + 1}"></td>
+	                <td style="text-align: left;">
+	                	<a th:href="@{'/board/view?seqno=' + ${list.seqno} + '&page=' + 
+	                			${page} + '&keyword=' + ${keyword}}" 
+	                   		onMouseover="this.style.textDecoration='underline'" 
+	                   		onMouseout="this.style.textDecoration='none'">
+	                   		<span th:text="${list.title}"></span>
+	                   	</a>
+	                </td>
+	                <td th:text="${list.writer}"></td>
+	                <td th:text="${#temporals.format(list.regdate,'yyyy-MM-dd HH:mm:ss')}"></td>	                	
+	                <td th:text="${list.hitno}"></td>
+	            </tr>
+			</th:block>
+			<th:block th:if="${list == null}">
+				<td colspan="5">등록된 게시물이 없습니다.</td>
+			</th:block>
+        </table>  
+        <br>
+		  <div>[(${pageList})]</div>
+		  <br>
+        <div class="bottom_menu">
+        	<a href="/board/list?page=1">처음으로</a>&nbsp;&nbsp;
+          <a href="/board/write">글쓰기</a>&nbsp;&nbsp;
+          <a href="/board/memberInfo">사용자관리</a>&nbsp;&nbsp;
+          <th:block th:if="${session.role == 'MASTER'}">
+          	<a href="/master/sysManage">시스템관리</a>&nbsp;&nbsp;
+          </th:block>
+          <a href="javascript:logout()">로그아웃</a>&nbsp;&nbsp;
+        </div>
+        <br><br>
+
+    </div>    
+    
+</body>
+
+</html>

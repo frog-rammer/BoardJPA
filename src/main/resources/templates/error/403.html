@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>403 에러 페이지</title>
+<link rel="stylesheet" href="/css/board.css">
+</head>
+<body>
+	<div class="main">
+		<h1>[[${session.username}]]님은 본 서비스에 대한 접근 권한이 없습니다.</h1>
+		<div style="width:50%;margin:auto">
+			<img src="/images/error.png">
+		</div>
+	</div>
+</body>
+</html>
